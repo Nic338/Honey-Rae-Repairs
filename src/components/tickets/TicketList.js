@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import "./tickets.css"
 import { Link } from "react-router-dom"
 import { Ticket } from "./Ticket"
+import { getAllEmployeesDetails, getAllTicketsWithEmployeeAssignments } from "../ApiManager"
 
 export const TicketList = ({ searchTermState }) => {
     const [tickets, setTickets] = useState([])
@@ -36,19 +37,18 @@ export const TicketList = ({ searchTermState }) => {
         [emergency]
     )
 
-    const getAllTickets = () => {
-        fetch(`http://localhost:8088/serviceTickets?_embed=employeeTickets`)
-           .then(response => response.json())
-           .then((ticketArray) => {
-            setTickets(ticketArray)
-           })
-    }
-
+    // const getAllTickets = () => {
+    //     fetch(`http://localhost:8088/serviceTickets?_embed=employeeTickets`)
+    //        .then(response => response.json())
+    //        .then((ticketArray) => {
+    //         setTickets(ticketArray)
+    //        })
+    // }
+    
     useEffect(
         () => {
-           getAllTickets()
-           fetch(`http://localhost:8088/employees?_expand=user`)
-           .then(response => response.json())
+           getAllTicketsWithEmployeeAssignments(setTickets)
+           getAllEmployeesDetails()
            .then((employeeArray) => {
             setEmployees(employeeArray)
            })
@@ -111,7 +111,7 @@ export const TicketList = ({ searchTermState }) => {
                 (ticket) => <Ticket key={`ticket--${ticket.id}`} employees={employees} 
                 currentUser={honeyUserObject} 
                 ticketObject={ticket}
-                getAllTickets={getAllTickets}
+                getAllTicketsWithEmployeeAssignments={getAllTicketsWithEmployeeAssignments}
                 />
                 
             )

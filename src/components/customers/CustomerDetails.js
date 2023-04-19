@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { getCustomerDetails } from "../ApiManager";
 
 
 // needs to create a component that displays the full name, email, phone#, and address of the customer when the customer's name is clicked in the list
@@ -9,8 +10,7 @@ export const CustomerDetails = () => {
     const {customerId} = useParams()
 
     useEffect(() => {
-        fetch(`http://localhost:8088/customers?_expand=user&userId=${customerId}`)
-        .then(response => response.json())
+        getCustomerDetails(customerId)
         .then(data => {
             const singleCustomer = data[0]
             updateCustomer(singleCustomer)

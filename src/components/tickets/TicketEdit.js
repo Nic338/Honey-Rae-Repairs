@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
+import { editTicket, getSpecificTicket } from "../ApiManager"
 
 export const TicketEdit = () => {
     // TODO: This state object should not be blank
@@ -18,8 +19,7 @@ export const TicketEdit = () => {
     // const honeyUserObject = JSON.parse(localHoneyUser)
     useEffect(
         () => {
-            fetch(`http://localhost:8088/serviceTickets/${ticketId}`)
-            .then(response => response.json())
+            getSpecificTicket()
             .then((data) => {
                 assignTicket(data)
             })
@@ -30,14 +30,7 @@ export const TicketEdit = () => {
 
         // TODO: Write the fetch for the PUT request to replace the object being edited
 
-        return fetch(`http://localhost:8088/serviceTickets/${ticket.id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(ticket)
-        })
-        .then(response => response.json())
+        return editTicket()
         .then(() => {
            navigate("/tickets")
 

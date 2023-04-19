@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { getLoggedInEmployee, updateSpecificEmployee } from "../ApiManager"
 
 export const EmployeeForm = () => {
     // TODO: Provide initial state for profile
@@ -12,8 +13,7 @@ export const EmployeeForm = () => {
     // TODO: Get employee profile info from API and update state
     useEffect(
         () => {
-            fetch(`http://localhost:8088/employees?userId=${honeyUserObject.id}`)
-            .then(response => response.json())
+            getLoggedInEmployee(honeyUserObject)
             .then(data => {
                 const employeeObject = data[0]
                 updateProfile(employeeObject)
@@ -37,14 +37,7 @@ export const EmployeeForm = () => {
             Navigate user to home page when done.
         */
 
-        return fetch(`http://localhost:8088/employees/${profile.id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(profile)
-        })
-        .then(response => response.json())
+        return updateSpecificEmployee(profile)
         .then(() => {
             setFeedback("Employee profile successfully saved")
 

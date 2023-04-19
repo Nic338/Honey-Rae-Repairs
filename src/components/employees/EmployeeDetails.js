@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
+import { getEmployeeTicketDetails } from "../ApiManager"
 
 
 
@@ -12,8 +13,7 @@ export const EmployeeDetails = () => {
 
     useEffect(
         () => {
-            fetch(`http://localhost:8088/employees?_expand=user&_embed=employeeTickets&userId=${employeeId}`)
-            .then(response => response.json())
+            getEmployeeTicketDetails(employeeId)
             .then((data) => {
                 const singleEmployee = data[0]
                 updateEmployee(singleEmployee)

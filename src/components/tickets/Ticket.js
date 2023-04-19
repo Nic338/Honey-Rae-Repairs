@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom"
+import { claimTicket, deleteSpecificTicket, getAllTicketsWithEmployeeAssignments, updateTicketWithDateComplete } from "../ApiManager"
 
 export const Ticket = ({ ticketObject, currentUser, employees, getAllTickets }) => {
 
@@ -27,11 +28,9 @@ const canClose = () => {
 const deleteButton = () => {
     if (!currentUser.staff) {
         return <button onClick={() => {
-            fetch(`http://localhost:8088/serviceTickets/${ticketObject.id}`, {
-                method: "DELETE"
-            })
+            deleteSpecificTicket(ticketObject)
             .then(() => {
-                getAllTickets()
+                getAllTicketsWithEmployeeAssignments()
             })
         }} className="ticket__delete">Delete</button>
     }
@@ -49,14 +48,7 @@ const closeTicket = () => {
        dateCompleted: new Date() 
     }
 
-    return fetch(`http://localhost:8088/serviceTickets/${ticketObject.id}`, {
-        method:"PUT",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(copy)
-    })
-        .then(response => response.json())
+    return updateTicketWithDateComplete(ticketObject, copy)
         .then(getAllTickets)
         
 
@@ -67,20 +59,10 @@ const buttonOrNoButton = () => {
     if (currentUser.staff) {
         return <button 
         onClick={() => {
-            fetch(`http://localhost:8088/employeeTickets`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    employeeId: userEmployee.id,
-                    serviceTicketId: ticketObject.id
-                })
-            })
-            .then(response => response.json())
+            claimTicket(userEmployee, ticketObject)
             .then(() => {
                 //get state from the API again
-                getAllTickets()
+                getAllTicketsWithEmployeeAssignments()
              })
         }}
         > Claim </button>
